@@ -1,0 +1,6 @@
+# Secrets and local config
+**/.env
+common/ssh/authorized_keys
+
+# Persistent data
+openwebui/data/

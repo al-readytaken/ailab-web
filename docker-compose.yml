@@ -1,0 +1,39 @@
+services:
+  openwebui:
+    container_name: openwebui
+    hostname: openwebui
+    build:
+      context: .
+      dockerfile: ${OPENWEBUI_DIR}/Dockerfile
+    ports:
+      - "${OPENWEBUI_IP_WEB}:${OPENWEBUI_PORT_WEB}:8080"
+      - "${OPENWEBUI_IP_SSH}:${OPENWEBUI_PORT_SSH}:22"
+    volumes:
+      - ${OPENWEBUI_DIR}/data:/app/backend/data
+      - ${OPENWEBUI_DIR}/scripts/entrypoint.bash:/entrypoint.bash:ro
+      - ${COMMON_DIR}/ssh/sshd_config:/etc/ssh/sshd_config:ro
+      - ${COMMON_DIR}/ssh/authorized_keys:/tmp/authorized_keys:ro
+    env_file: ${OPENWEBUI_DIR}/.env
+    environment:
+      # Override the image's default of /ollama (which expects a /ollama
+      # proxy path on the openwebui server). Use the direct internal URL
+      # so openwebui talks to ollama via the docker network.
+      - OLLAMA_BASE_URL=http://ollama:11434
+    entrypoint: ["/entrypoint.bash"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    networks:
+      - ailab-web
+      - ailab-local
+
+networks:
+  ailab-web:
+    driver: bridge
+  ailab-local:
+    external: true
+    name: ailab-localai_ailab-local
