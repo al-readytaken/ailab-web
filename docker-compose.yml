@@ -13,8 +13,11 @@ services:
       - ${OPENWEBUI_DIR}/scripts/entrypoint.bash:/entrypoint.bash:ro
       - ${COMMON_DIR}/ssh/sshd_config:/etc/ssh/sshd_config:ro
       - ${COMMON_DIR}/ssh/authorized_keys:/tmp/authorized_keys:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file: ${OPENWEBUI_DIR}/.env
     environment:
+      - EXTRA_PIP_PACKAGES=datasets==3.6.0
       # Override the image's default of /ollama (which expects a /ollama
       # proxy path on the openwebui server). Use the direct internal URL
       # so openwebui talks to ollama via the docker network.
@@ -30,6 +33,26 @@ services:
     networks:
       - ailab-web
       - ailab-local
+
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    build:
+      context: .
+      dockerfile: ${NGINX_DIR}/Dockerfile
+    ports:
+      - "${NGINX_IP}:${NGINX_PORT_HTTP}:80"
+      - "${NGINX_IP}:${NGINX_PORT_HTTPS}:443"
+    env_file: ${NGINX_DIR}/.env
+    volumes:
+      - ${NGINX_DIR}/data/certs:/data/certs
+      - ${NGINX_DIR}/scripts/entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/entrypoint.sh"]
+    depends_on:
+      - openwebui
+    restart: unless-stopped
+    networks:
+      - ailab-web
 
 networks:
   ailab-web:

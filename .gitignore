@@ -4,3 +4,5 @@ common/ssh/authorized_keys
 
 # Persistent data
 openwebui/data/
+
+nginx/data/certs/*.pem
