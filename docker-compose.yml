@@ -49,20 +49,19 @@ services:
     networks:
       - ailab-web
 
-  nginx:
-    container_name: nginx
-    hostname: nginx
+  swag:
+    container_name: swag
+    hostname: swag
     build:
       context: .
-      dockerfile: ${NGINX_DIR}/Dockerfile
+      dockerfile: ${SWAG_DIR}/Dockerfile
     ports:
-      - "${NGINX_IP}:${NGINX_PORT_HTTP}:80"
-      - "${NGINX_IP}:${NGINX_PORT_HTTPS}:443"
-    env_file: ${NGINX_DIR}/.env
+      - "${SWAG_IP}:${SWAG_PORT_HTTP}:80"
+      - "${SWAG_IP}:${SWAG_PORT_HTTPS}:443"
+    env_file: ${SWAG_DIR}/.env
     volumes:
-      - ${NGINX_DIR}/data/certs:/data/certs
-      - ${NGINX_DIR}/scripts/entrypoint.sh:/entrypoint.sh:ro
-    entrypoint: ["/entrypoint.sh"]
+      - ${SWAG_DIR}/data/certs:/config/keys
+      - ${SWAG_DIR}/scripts/entrypoint.sh:/custom-entrypoint.sh:ro
     depends_on:
       - openwebui
     restart: unless-stopped

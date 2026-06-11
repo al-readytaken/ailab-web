@@ -6,3 +6,6 @@ common/ssh/authorized_keys
 openwebui/data/
 
 nginx/data/certs/*.pem
+
+swag/data/
+!swag/data/certs/.gitkeep
