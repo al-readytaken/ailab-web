@@ -19,6 +19,3 @@ RUN mkdir -p /var/run/sshd /root/.ssh && \
     ssh-keygen -A
 COPY common/ssh/authorized_keys /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys && chown root:root /root/.ssh/authorized_keys
-
-
-WORKDIR /opt/projects
