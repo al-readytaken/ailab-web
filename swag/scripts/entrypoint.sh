@@ -26,6 +26,21 @@ elif [ "${URL:-example.com}" = "example.com" ]; then
     USE_SELF_SIGNED=true
 fi
 
+# Ensure the symlink structure exists in /config/keys so that SWAG's built-in
+# init-keygen script (which runs next, via s6-overlay) sees existing files and
+# skips its fallback that would otherwise generate a linuxserver.io self-signed
+# cert as a real file, replacing our symlinks.
+#
+# In STAGING mode the live-path already has the self-signed cert written above,
+# so the symlinks resolve correctly from the start.
+# In production mode certbot will place real certs at the live-path shortly;
+# the symlink skeleton just prevents init-keygen from running first.
+mkdir -p "$(dirname "$LE_LIVE_DIR")"
+rm -f /config/keys/letsencrypt /config/keys/cert.crt /config/keys/cert.key
+ln -s "../etc/letsencrypt/live/${URL:-example.com}" /config/keys/letsencrypt
+ln -s ./letsencrypt/fullchain.pem /config/keys/cert.crt
+ln -s ./letsencrypt/privkey.pem /config/keys/cert.key
+
 if [ "$USE_SELF_SIGNED" = "true" ]; then
     if [ ! -f "$LE_LIVE_DIR/fullchain.pem" ] || [ ! -f "$LE_LIVE_DIR/privkey.pem" ]; then
         echo ">>> Pre-seeding self-signed fallback certificate at ${LE_LIVE_DIR} ..."
