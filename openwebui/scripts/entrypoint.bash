@@ -19,6 +19,14 @@ mkdir -p /var/run/sshd
 /usr/sbin/sshd
 echo ">>> SSH daemon started"
 
+# env
+export CORS_ALLOW_ORIGIN=$CORS_ALLOW_ORIGIN
+export HF_TOKEN=$HF_TOKEN
+export OLLAMA_BASE_URL=$OLLAMA_BASE_URL
+export WEBUI_SECRET_KEY=$WEBUI_SECRET_KEY
+export GLOBAL_LOG_LEVEL="DEBUG"
+
+
 # Start Open WebUI
 echo ">>> Starting Open WebUI on port ${WEBUI_PORT:-3001}"
 exec /app/backend/start.sh

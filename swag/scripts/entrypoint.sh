@@ -34,7 +34,8 @@ if [ "$USE_SELF_SIGNED" = "true" ]; then
         openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
             -keyout "$LE_LIVE_DIR/privkey.pem" \
             -out "$LE_LIVE_DIR/fullchain.pem" \
-            -subj "/CN=${URL:-example.com}/O=SWAG/C=DE"
+            -subj "/CN=${URL:-example.com}/O=SWAG/C=DE" \
+            -addext "subjectAltName=DNS:${URL:-example.com},DNS:localhost,IP:127.0.0.1"
         echo ">>> Self-signed fallback certificate seeded"
     fi
 else

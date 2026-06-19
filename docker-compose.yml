@@ -21,11 +21,6 @@ services:
       # Override the image's default of /ollama (which expects a /ollama
       # proxy path on the openwebui server). Use the direct internal URL
       # so openwebui talks to ollama via the docker network.
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
-      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN}
-      - HF_TOKEN=${HF_TOKEN}
-      - GLOBAL_LOG_LEVEL="DEBUG"
     entrypoint: ["/entrypoint.bash"]
     restart: unless-stopped
     healthcheck:
@@ -65,6 +60,7 @@ services:
     env_file: ${SWAG_DIR}/.env
     volumes:
       - ${SWAG_DIR}/data/certs:/config/keys
+      - ${SWAG_DIR}/nginx/default.conf:/config/nginx/site-confs/default.conf
       - ${SWAG_DIR}/scripts/entrypoint.sh:/custom-entrypoint.sh:ro
     depends_on:
       - openwebui
