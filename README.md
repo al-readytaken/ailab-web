@@ -116,3 +116,19 @@ Root password is set in `openwebui/.env` (`ROOT_PASSWORD`).
 
 - `ailab-web` — internal bridge for all web services to communicate
 - `ailab-local` — external bridge (from `ailab-localai`) for Ollama access
+
+## Troubleshooting
+
+### SWAG serves the wrong certificate (e.g. linuxserver.io self-signed)
+
+If SWAG shows a certificate that doesn't match your configured `URL`, the Let's Encrypt symlink inside the container may point to a stale domain. Fix it:
+
+```bash
+# Point the letsencrypt symlink to the correct domain
+docker exec swag ln -sfn ../etc/letsencrypt/live/<YOUR_URL> /config/keys/letsencrypt
+
+# Verify nginx picks up the new cert
+docker exec swag nginx -s reload
+```
+
+Replace `<YOUR_URL>` with the value of `URL` from `swag/.env` (e.g. `openwebui-local` for development).
