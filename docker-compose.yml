@@ -73,4 +73,4 @@ networks:
     driver: bridge
   ailab-local:
     external: true
-    name: ailab-localai_ailab-local
+    name: brAilab
