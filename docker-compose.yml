@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: ${KOKORO_DIR}/Dockerfile
     ports:
-      - "127.0.0.1:${KOKORO_PORT}:${KOKORO_PORT}"
+      - "${KOKORO_IP}:${KOKORO_PORT}:${KOKORO_PORT}"
     env_file: ${KOKORO_DIR}/.env
     volumes:
       - ${KOKORO_DIR}/scripts/entrypoint.sh:/entrypoint.sh:ro
