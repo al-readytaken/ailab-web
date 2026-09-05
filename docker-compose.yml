@@ -15,6 +15,7 @@ services:
       - ${COMMON_DIR}/ssh/authorized_keys:/tmp/authorized_keys:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "${OPENWEBUI_LOCALAI_HOST}:${OPENWEBUI_LOCALAI_IP}"
     env_file: ${OPENWEBUI_DIR}/.env
     environment:
       - EXTRA_PIP_PACKAGES=datasets==3.6.0
