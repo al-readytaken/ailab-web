@@ -7,10 +7,6 @@ DEVICE=${KOKORO_DEVICE:-cpu}
 
 echo ">>> Starting Kokoro-FastAPI (device=${DEVICE}, port=${PORT}, log-level=${LOG_LEVEL})..."
 
-ls -la /usr/local/bin
-echo TAILING
-tail -f /dev/null
-
 exec /usr/local/bin/uv run --extra "${DEVICE}" --no-sync python -m uvicorn api.src.main:app \
   --host 0.0.0.0 \
   --port "${PORT}" \
